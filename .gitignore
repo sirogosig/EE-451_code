@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,linux,pycharm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,jupyternotebooks,linux,pycharm+all
 
+data/lab-01-data
+tutorial
+
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
