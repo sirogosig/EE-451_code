@@ -261,3 +261,6 @@ dmypy.json
 .prof
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,linux,pycharm+all
+
+# Added by student (Elias)
+*.DS_STORE
