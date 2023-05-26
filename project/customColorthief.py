@@ -13,6 +13,20 @@ __version__ = '0.2.1'
 import math
 
 from PIL import Image
+from colorthief import ColorThief
+
+# Cyril's attempt:
+class ColorThiefCustom(ColorThief):
+    """Color thief main class."""
+    def __init__(self, image):
+        """Create one color thief for one image.
+
+        :param file: A filename (string) or a file object. The file object
+                     must implement `read()`, `seek()`, and `tell()` methods,
+                     and be opened in binary mode.
+        """
+        super().__init__('')
+        super.image = image
 
 
 class cached_property(object):
