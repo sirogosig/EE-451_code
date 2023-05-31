@@ -17,7 +17,6 @@ from colorthief import ColorThief
 
 # Cyril's attempt:
 class ColorThiefCustom(ColorThief):
-    """Color thief main class."""
     def __init__(self, image):
         """Create one color thief for one image.
 
