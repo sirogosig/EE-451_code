@@ -112,28 +112,7 @@ def crop_rectangle(image, rect):
 
     if not inside_rect(rect = rect, num_cols = num_cols, num_rows = num_rows):
         print("Proposed rectangle is not fully in the image.")
-
-        rect_center = rect[0]
-        rect_width, rect_height = rect[1]
-        box = cv2.boxPoints(rect)
-
-        translation_x = 0
-        translation_y = 0
-
-        if box[0][0] < 0:
-            translation_x = abs(box[0][0])
-        elif box[2][0] >= num_cols:
-            translation_x = num_cols - box[2][0] - 1
-
-        if box[0][1] < 0:
-            translation_y = abs(box[0][1])
-        elif box[2][1] >= num_rows:
-            translation_y = num_rows - box[2][1] - 1
-
-        # Adjust the contour by applying the translation
-        adjusted_c = np.array(c) + [translation_x, translation_y]
-
-        rect = cv2.minAreaRect(adjusted_c)
+        return None
 
     rect_center = rect[0]
     rect_center_x = rect_center[0]
@@ -149,7 +128,7 @@ def crop_rectangle(image, rect):
 
 
 
-def crop_rotated_rectangle(image, rect):
+def crop_rotated_rectangle(image, rect, c):
     # Crop a rotated rectangle from a image
 
     num_rows = image.shape[0]
@@ -157,7 +136,28 @@ def crop_rotated_rectangle(image, rect):
 
     if not inside_rect(rect = rect, num_cols = num_cols, num_rows = num_rows):
         print("Proposed rectangle is not fully in the image.")
-        return None
+
+        rect_center = rect[0]
+        rect_width, rect_height = rect[1]
+        box = cv2.boxPoints(rect)
+
+        translation_x = 0
+        translation_y = 0
+
+        if min([box[i][0] for i in range(4)]) < 0:
+            translation_x = abs(min([box[i][0] for i in range(4)]))
+        elif max([box[i][0] for i in range(4)]) >= num_cols:
+            translation_x = num_cols - max([box[i][0] for i in range(4)]) - 1
+
+        if min([box[i][1] for i in range(4)])< 0:
+            translation_y = abs(min([box[i][1] for i in range(4)]))
+        elif max([box[i][1] for i in range(4)]) >= num_rows:
+            translation_y = num_rows - max([box[i][1] for i in range(4)]) - 1
+
+        # Adjust the contour by applying the translation
+        adjusted_c = np.astype(np.array(c) + [translation_x, translation_y], np.float32)
+
+        rect = cv2.minAreaRect(adjusted_c)
 
     rotated_angle = rect[2]
 
