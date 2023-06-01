@@ -48,7 +48,7 @@ def inside_rect(rect, num_cols, num_rows):
 
 def rect_bbx(rect):
     # Rectangle bounding box for rotated rectangle
-    # Example: 
+    # Example:
     # rotated rectangle: height 4, width 4, center (10, 10), angle 45 degree
     # bounding box for this rotated rectangle, height 4*sqrt(2), width 4*sqrt(2), center (10, 10), angle 0 degree
 
@@ -112,7 +112,28 @@ def crop_rectangle(image, rect):
 
     if not inside_rect(rect = rect, num_cols = num_cols, num_rows = num_rows):
         print("Proposed rectangle is not fully in the image.")
-        return None
+
+        rect_center = rect[0]
+        rect_width, rect_height = rect[1]
+        box = cv2.boxPoints(rect)
+
+        translation_x = 0
+        translation_y = 0
+
+        if box[0][0] < 0:
+            translation_x = abs(box[0][0])
+        elif box[2][0] >= num_cols:
+            translation_x = num_cols - box[2][0] - 1
+
+        if box[0][1] < 0:
+            translation_y = abs(box[0][1])
+        elif box[2][1] >= num_rows:
+            translation_y = num_rows - box[2][1] - 1
+
+        # Adjust the contour by applying the translation
+        adjusted_c = np.array(c) + [translation_x, translation_y]
+
+        rect = cv2.minAreaRect(adjusted_c)
 
     rect_center = rect[0]
     rect_center_x = rect_center[0]
@@ -172,9 +193,9 @@ def crop_rotated_rectangle_test():
 
     img_rows = img.shape[0]
     img_cols = img.shape[1]
-    
+
     # Generate random rect
-    
+
     while True:
         center = (np.random.randint(low = 1, high = img_cols), np.random.randint(low = 0, high = img_rows))
         width = np.random.randint(low = 1, high = img_cols)
@@ -183,7 +204,7 @@ def crop_rotated_rectangle_test():
         rect = (center, (width, height), angle)
         if inside_rect(rect = rect, num_cols = img_cols, num_rows = img_rows):
             break
-            
+
     #print(rect)
 
     box = cv2.boxPoints(rect).astype(np.int0)
@@ -199,10 +220,10 @@ def crop_rotated_rectangle_test():
     plt.imshow(image_cropped)
     plt.show()
     '''
-    
+
     # plot it
-    fig = plt.figure(figsize=(8, 6)) 
-    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1]) 
+    fig = plt.figure(figsize=(8, 6))
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
     ax0 = plt.subplot(gs[0])
     ax0.imshow(img)
     ax1 = plt.subplot(gs[1])
@@ -210,9 +231,9 @@ def crop_rotated_rectangle_test():
 
     plt.tight_layout()
     plt.savefig('demo.png', dpi=300, bbox_inches='tight')
-    
+
     plt.show()
-    
+
     return
 
 
